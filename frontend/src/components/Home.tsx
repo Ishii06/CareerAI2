@@ -158,7 +158,7 @@ function Home() {
         </motion.div>
 
         <motion.div whileHover={{ scale: 1.05 }} className="p-6 rounded-2xl bg-white/5 shadow-lg">
-          <h3 className="text-2xl font-bold mb-3 text-green-400">Internships</h3>
+          <h3 className="text-2xl font-bold mb-3 text-indigo-500">Internships</h3>
           <p className="text-white/70">
             Discover internships tailored to your skill set and career interests
             to gain real-world experience.

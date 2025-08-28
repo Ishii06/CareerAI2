@@ -9,19 +9,23 @@ export const getCareerAdvice = async (req, res) => {
     const prompt = `The user has skills: ${skills}.
     Experience: ${experience}.
     Interests: ${interests}.
-    Suggest 3 career paths, trending job roles, required skills, and a 6-month learning roadmap,Keep it concise.`;
+    Suggest 3 career paths, trending job roles, required skills, and a 6-month learning roadmap,Keep it concise.`
 
     const response = await ollama.chat({
       model: "gemma3:4b",   // ✅ Can swap with any OpenRouter-supported model
       messages: [{ role: "user", content: prompt }],
     });
 
-    res.json({ advice: response.message.content });
+    // 🧹 Remove all * (markdown stars)
+    const cleanText = response.message.content.replace(/\*/g, "");
+
+    res.json({ advice: cleanText });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "AI service failed" });
   }
 };
+
 
 // Skill recommendations + auto-save
 export const getSkillAdvice = async (req, res) => {  
