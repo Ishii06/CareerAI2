@@ -9,6 +9,7 @@ import courseRoute from "./routes/courseRoute.js";
 import cookieParser from "cookie-parser";
 import internshipRoute from "./routes/internshipRoute.js";
 import passport from "./config/passport.js";
+import hackathonRoute from "./routes/hackathonRoute.js";
 import resumeRoute from "./routes/resumeRoutes.js";
 // Load environment variables
 dotenv.config();
@@ -34,6 +35,7 @@ app.use("/api/progress", progressRoute);
 app.use("/api/courses", courseRoute);
 app.use("/api/internships", internshipRoute);
 app.use("/api/resume", resumeRoute);
+app.use("/api/hackathons", hackathonRoute);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
