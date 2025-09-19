@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { NavLink } from "react-router-dom";
-import { useAuthStore } from "./store/useUserStore"; // adjust path if needed
+import { useAuthStore } from "./store/useUserStore";
+import HackathonCarousel from "../components/HackathonCarousel";
 
 function Home() {
   const { isLoggedIn } = useAuthStore();
@@ -165,6 +166,8 @@ function Home() {
           </p>
         </motion.div>
       </section>
+
+      <HackathonCarousel />
 
       {/* Footer */}
       <footer className="py-8 text-center text-white/50 border-t border-white/10 relative z-10">
