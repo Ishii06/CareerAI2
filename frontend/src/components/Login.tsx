@@ -100,6 +100,19 @@ function Login() {
             >
               Log In
             </motion.button>
+            <div className="mt-6 text-center">
+            <a
+              href="http://localhost:5000/api/auth/google"
+              className="inline-flex items-center justify-center w-full px-4 py-3 bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg text-white font-semibold transition"
+            >
+              <img
+                src="https://www.citypng.com/public/uploads/preview/google-logo-icon-gsuite-hd-701751694791470gzbayltphh.png?v=2025062016"
+                alt="Google"
+                className="w-5 h-5 mr-2 rounded-xl"
+              />
+              Continue with Google
+            </a>
+          </div>
           </form>
 
           <p className="mt-6 text-center text-sm text-gray-400">

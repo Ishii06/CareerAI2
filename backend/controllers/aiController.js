@@ -16,7 +16,6 @@ export const getCareerAdvice = async (req, res) => {
       messages: [{ role: "user", content: prompt }],
     });
 
-    // 🧹 Remove all * (markdown stars)
     const cleanText = response.message.content.replace(/\*/g, "");
 
     res.json({ advice: cleanText });

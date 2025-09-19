@@ -57,7 +57,6 @@ export default function Dashboard() {
     required: 1,
   }));
 
-  // ✅ Custom Tick Renderer to wrap or truncate text
   const renderCustomTick = ({ x, y, payload }: any) => {
     return (
       <text
@@ -144,48 +143,49 @@ export default function Dashboard() {
               Hi, <span className="text-pink-400">{user?.name}</span> 👋
             </h2>
 
-            {/* Progress Cards */}
-            {/* Progress Cards */}
-{/* Progress Cards */}
-{/* Progress Cards */}
-<div>
-  <h3 className="text-2xl font-semibold mb-6">Your Roadmap</h3>
-  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-    {progress.map((skill) => (
-      <motion.div
-        key={skill.name}
-        whileHover={{ scale: 1.05 }}
-        className={`p-6 rounded-2xl shadow-lg cursor-pointer transition relative overflow-hidden
-          ${
-            skill.completed
-              ? "bg-gradient-to-r from-purple-500 via-indigo-500 to-blue-500"
-              : "bg-gray-900 ring-1 ring-gray-700"
-          }`}
-        onClick={() => toggleSkill(skill.name, !skill.completed)}
-      >
-        {/* Wavy overlay when completed */}
-        {skill.completed && (
-          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/wavecut.png')] opacity-20 animate-pulse" />
-        )}
+            {/* Roadmap */}
+            <div>
+              <h3 className="text-2xl font-semibold mb-6">Your Roadmap</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {progress.map((skill) => (
+                  <motion.div
+                    key={skill.name}
+                    whileHover={{ scale: 1.05 }}
+                    className={`p-6 rounded-2xl shadow-lg cursor-pointer transition relative overflow-hidden
+                      ${
+                        skill.completed
+                          ? "bg-gradient-to-r from-purple-500 via-indigo-500 to-blue-500"
+                          : "bg-gray-900 ring-1 ring-gray-700"
+                      }`}
+                    onClick={() => toggleSkill(skill.name, !skill.completed)}
+                  >
+                    {skill.completed && (
+                      <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/wavecut.png')] opacity-20 animate-pulse" />
+                    )}
+                    <h4
+                      className={`text-xl font-medium relative z-10 ${
+                        skill.completed
+                          ? "bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent truncate"
+                          : "text-white"
+                      }`}
+                    >
+                      {skill.name}
+                    </h4>
+                    <p className="text-gray-200 mt-2 relative z-10">Month {skill.month}</p>
+                  </motion.div>
+                ))}
 
-        <h4
-          className={`text-xl font-medium relative z-10 ${
-            skill.completed
-              ? "bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent truncate"
-              : "text-white"
-          }`}
-        >
-          {skill.name}
-        </h4>
-
-        <p className="text-gray-200 mt-2 relative z-10">Month {skill.month}</p>
-      </motion.div>
-    ))}
-  </div>
-</div>
-
-
-
+                {/* 🚀 Build Resume Card */}
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  onClick={() => navigate("/resume-builder")}
+                  className="p-6 rounded-2xl shadow-lg cursor-pointer bg-gray-900 ring-1 ring-gray-700 hover:bg-gray-800 transition relative overflow-hidden"
+                >
+                  <h4 className="text-xl font-medium text-white">📄 Build Your Resume</h4>
+                  <p className="text-gray-400 mt-2">Quickly generate a professional resume.</p>
+                </motion.div>
+              </div>
+            </div>
 
             {/* Radar Chart */}
             {progress.length > 0 && (

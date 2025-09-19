@@ -8,6 +8,8 @@ import Internship from "./components/Internship";
 import Dashboard from "./components/Dashboard";
 import Skills from "./components/Skills";
 import Home from "./components/Home";
+import ResumeBuilder from "./pages/ResumeBuilder";
+
 
 function App() {
   return (
@@ -22,6 +24,7 @@ function App() {
           <Route path="/career" element={<Career />} />
           <Route path="/internships" element={<Internship />} />
           <Route path="/skills" element={<Skills />} />
+           <Route path="/resume-builder" element={<ResumeBuilder />} />
         </Routes>
       </Router>
     </AuthProvider>

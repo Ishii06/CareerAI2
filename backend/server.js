@@ -8,6 +8,8 @@ import progressRoute from "./routes/progressRoute.js";
 import courseRoute from "./routes/courseRoute.js";
 import cookieParser from "cookie-parser";
 import internshipRoute from "./routes/internshipRoute.js";
+import passport from "./config/passport.js";
+import resumeRoute from "./routes/resumeRoutes.js";
 // Load environment variables
 dotenv.config();
 
@@ -21,6 +23,7 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(cookieParser());
+app.use(passport.initialize());
 
 // Connect Database
 connectDB();
@@ -30,6 +33,7 @@ app.use("/api/ai", aiRoutes);
 app.use("/api/progress", progressRoute);
 app.use("/api/courses", courseRoute);
 app.use("/api/internships", internshipRoute);
+app.use("/api/resume", resumeRoute);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

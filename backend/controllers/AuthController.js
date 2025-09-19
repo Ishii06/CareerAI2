@@ -115,3 +115,18 @@ export const logout = async (req, res) => {
     return res.status(500).json({ message: "Internal server error", error });
   }
 };
+
+
+export const googleCallback= async(req,res)=>{
+   try {
+      const user = req.user; // from passport strategy
+      const { accessToken, refreshToken } = generateTokens(user._id);
+
+      await storeRefreshToken(user._id, refreshToken);
+      setCookies(res, accessToken, refreshToken);
+
+      res.redirect("http://localhost:5173/"); // frontend
+    } catch (error) {
+      res.status(500).json({ message: "Google auth failed", error });
+    }
+}
