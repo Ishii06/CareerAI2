@@ -1,7 +1,7 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Menu, X, User, LogOut, Brain } from "lucide-react";
 import { useAuthStore } from "./store/useUserStore.ts";
 import axios from "axios";
 
@@ -11,12 +11,12 @@ function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
 
-  // ✅ Fetch user on mount (persisted login)
+  // Fetch user on mount (persisted login)
   useEffect(() => {
     fetchUser();
   }, [fetchUser]);
 
-  // 🔹 Logout handler
+  // Logout handler
   const handleLogout = async () => {
     try {
       await axios.post(
@@ -31,7 +31,7 @@ function Navbar() {
     }
   };
 
-  // 🔹 Scroll shadow
+  // Scroll shadow
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
@@ -50,136 +50,215 @@ function Navbar() {
     <nav
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
         scrolled
-          ? "backdrop-blur-md bg-black/40 shadow-lg border-b border-white/10"
+          ? "backdrop-blur-2xl bg-black/60 shadow-[0_8px_32px_rgba(0,0,0,0.4)] border-b border-white/10"
           : "bg-transparent"
       }`}
     >
-      <div className="max-w-7xl mx-auto flex justify-between items-center px-6 py-3">
+      <div className="max-w-7xl mx-auto flex justify-between items-center px-6 py-4">
         {/* Logo */}
-        <NavLink
-          to="/"
-          className="relative text-2xl font-extrabold tracking-wide bg-gradient-to-r from-cyan-400 via-fuchsia-500 to-purple-600 bg-[length:200%_200%] bg-clip-text text-transparent animate-gradient-move"
+        <motion.div
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
         >
-          CareerAI
-        </NavLink>
+          <NavLink
+            to="/"
+            className="relative text-2xl font-extrabold tracking-wide bg-gradient-to-r from-white via-violet-200 to-pink-200 bg-clip-text text-transparent flex items-center gap-2"
+          >
+            <Brain className="w-7 h-7 text-violet-400" />
+            CareerAI
+          </NavLink>
+        </motion.div>
 
         {/* Desktop Menu */}
-        <div className="hidden md:flex gap-8 text-sm items-center">
+        <div className="hidden md:flex gap-2 text-sm items-center">
           {navLinks.map(({ to, label }) => (
             <NavLink
               key={to}
               to={to}
               className={({ isActive }) =>
-                `transition duration-300 relative after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-gradient-to-r from-cyan-400 to-fuchsia-500 after:transition-all after:duration-500 hover:after:w-full ${
+                `px-4 py-2 rounded-xl transition-all duration-300 relative overflow-hidden group ${
                   isActive
-                    ? "text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.8)]"
-                    : "text-white/80 hover:text-fuchsia-400"
+                    ? "text-white bg-white/10 backdrop-blur-xl border border-white/20 shadow-lg"
+                    : "text-white/80 hover:text-white hover:bg-white/5"
                 }`
               }
             >
-              {label}
+              <span className="relative z-10">{label}</span>
+              {/* Hover glow effect */}
+              <div className="absolute inset-0 bg-gradient-to-r from-violet-500/20 to-pink-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl" />
             </NavLink>
           ))}
 
-          {isLoggedIn ? (
-            <>
-              <span className="text-white/80">Hi, {user?.name}</span>
-              <button
-                onClick={handleLogout}
-                className="px-4 py-1.5 rounded-xl text-sm font-medium text-white/90 border border-red-500/50 hover:bg-red-600/20 hover:shadow-[0_0_12px_rgba(239,68,68,0.8)] transition"
-              >
-                Logout
-              </button>
-            </>
-          ) : (
-            <>
-              <NavLink
-                to="/login"
-                className="px-4 py-1.5 rounded-xl text-sm font-medium text-white/90 border border-cyan-400/40 hover:bg-cyan-400/20 hover:shadow-[0_0_12px_rgba(34,211,238,0.7)] transition"
-              >
-                Login
-              </NavLink>
-              <NavLink
-                to="/register"
-                className="px-4 py-1.5 rounded-xl text-sm font-medium text-white/90 border border-fuchsia-400/40 hover:bg-fuchsia-400/20 hover:shadow-[0_0_12px_rgba(232,121,249,0.7)] transition"
-              >
-                Register
-              </NavLink>
-            </>
-          )}
+          {/* User Section */}
+          <div className="ml-4 flex items-center gap-3">
+            {isLoggedIn ? (
+              <>
+                <div className="flex items-center gap-2 px-3 py-2 bg-white/10 backdrop-blur-xl border border-white/20 rounded-xl">
+                  <User className="w-4 h-4 text-violet-400" />
+                  <span className="text-white/90 text-sm">Hi, {user?.name}</span>
+                </div>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={handleLogout}
+                  className="px-4 py-2 rounded-xl text-sm font-medium text-white/90 bg-red-500/20 border border-red-500/30 hover:bg-red-500/30 hover:border-red-500/50 transition-all duration-200 flex items-center gap-2"
+                >
+                  <LogOut className="w-4 h-4" />
+                  Logout
+                </motion.button>
+              </>
+            ) : (
+              <>
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <NavLink
+                    to="/login"
+                    className="px-4 py-2 rounded-xl text-sm font-medium text-white/90 bg-white/10 backdrop-blur-xl border border-white/20 hover:bg-white/15 hover:border-white/30 transition-all duration-200"
+                  >
+                    Login
+                  </NavLink>
+                </motion.div>
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <NavLink
+                    to="/register"
+                    className="px-4 py-2 rounded-xl text-sm font-medium text-white bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 border border-violet-500/30 hover:border-violet-400/50 transition-all duration-200 shadow-lg"
+                  >
+                    Register
+                  </NavLink>
+                </motion.div>
+              </>
+            )}
+          </div>
         </div>
 
         {/* Mobile Menu Button */}
-        <button
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
           onClick={() => setMenuOpen(!menuOpen)}
-          className="md:hidden text-white"
+          className="md:hidden p-2 rounded-xl bg-white/10 backdrop-blur-xl border border-white/20 text-white"
         >
-          {menuOpen ? <X size={26} /> : <Menu size={26} />}
-        </button>
+          <AnimatePresence mode="wait">
+            {menuOpen ? (
+              <motion.div
+                key="close"
+                initial={{ rotate: -90, opacity: 0 }}
+                animate={{ rotate: 0, opacity: 1 }}
+                exit={{ rotate: 90, opacity: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                <X size={20} />
+              </motion.div>
+            ) : (
+              <motion.div
+                key="menu"
+                initial={{ rotate: 90, opacity: 0 }}
+                animate={{ rotate: 0, opacity: 1 }}
+                exit={{ rotate: -90, opacity: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                <Menu size={20} />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.button>
       </div>
 
       {/* Mobile Dropdown */}
-      {menuOpen && (
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          className="md:hidden flex flex-col gap-4 px-6 pb-4 bg-black/20 backdrop-blur-lg border-t border-white"
-        >
-          {navLinks.map(({ to, label }) => (
-            <NavLink
-              key={to}
-              to={to}
-              onClick={() => setMenuOpen(false)}
-              className="text-white/80 hover:text-cyan-400 transition"
-            >
-              {label}
-            </NavLink>
-          ))}
-          {isLoggedIn ? (
-            <button
-              onClick={() => {
-                handleLogout();
-                setMenuOpen(false);
-              }}
-              className="text-red-400 hover:text-red-500 transition"
-            >
-              Logout
-            </button>
-          ) : (
-            <>
-              <NavLink
-                to="/login"
-                onClick={() => setMenuOpen(false)}
-                className="text-cyan-400 hover:text-cyan-300 transition"
-              >
-                Login
-              </NavLink>
-              <NavLink
-                to="/register"
-                onClick={() => setMenuOpen(false)}
-                className="text-fuchsia-400 hover:text-fuchsia-300 transition"
-              >
-                Register
-              </NavLink>
-            </>
-          )}
-        </motion.div>
-      )}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -10, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -10, scale: 0.95 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className="md:hidden bg-black/80 backdrop-blur-2xl border-t border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
+          >
+            <div className="flex flex-col gap-2 px-6 py-4">
+              {navLinks.map(({ to, label }, index) => (
+                <motion.div
+                  key={to}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.05, duration: 0.2 }}
+                >
+                  <NavLink
+                    to={to}
+                    onClick={() => setMenuOpen(false)}
+                    className={({ isActive }) =>
+                      `block px-4 py-3 rounded-xl transition-all duration-200 ${
+                        isActive
+                          ? "text-white bg-white/10 backdrop-blur-xl border border-white/20"
+                          : "text-white/80 hover:text-white hover:bg-white/5"
+                      }`
+                    }
+                  >
+                    {label}
+                  </NavLink>
+                </motion.div>
+              ))}
 
-      {/* Gradient Animation */}
-      <style>
-        {`
-          @keyframes gradient-move {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-          }
-          .animate-gradient-move {
-            animation: gradient-move 6s ease infinite;
-          }
-        `}
-      </style>
+              {/* Mobile User Section */}
+              <div className="mt-4 pt-4 border-t border-white/10">
+                {isLoggedIn ? (
+                  <>
+                    <motion.div
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: navLinks.length * 0.05, duration: 0.2 }}
+                      className="flex items-center gap-2 px-4 py-3 mb-2 bg-white/10 backdrop-blur-xl border border-white/20 rounded-xl"
+                    >
+                      <User className="w-4 h-4 text-violet-400" />
+                      <span className="text-white/90 text-sm">Hi, {user?.name}</span>
+                    </motion.div>
+                    <motion.button
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: (navLinks.length + 1) * 0.05, duration: 0.2 }}
+                      onClick={() => {
+                        handleLogout();
+                        setMenuOpen(false);
+                      }}
+                      className="w-full flex items-center gap-2 px-4 py-3 rounded-xl text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-all duration-200"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      Logout
+                    </motion.button>
+                  </>
+                ) : (
+                  <div className="space-y-2">
+                    <motion.div
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: navLinks.length * 0.05, duration: 0.2 }}
+                    >
+                      <NavLink
+                        to="/login"
+                        onClick={() => setMenuOpen(false)}
+                        className="block px-4 py-3 rounded-xl text-white/90 bg-white/10 backdrop-blur-xl border border-white/20 hover:bg-white/15 hover:border-white/30 transition-all duration-200 text-center"
+                      >
+                        Login
+                      </NavLink>
+                    </motion.div>
+                    <motion.div
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: (navLinks.length + 1) * 0.05, duration: 0.2 }}
+                    >
+                      <NavLink
+                        to="/register"
+                        onClick={() => setMenuOpen(false)}
+                        className="block px-4 py-3 rounded-xl text-white bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 border border-violet-500/30 hover:border-violet-400/50 transition-all duration-200 text-center shadow-lg"
+                      >
+                        Register
+                      </NavLink>
+                    </motion.div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 }

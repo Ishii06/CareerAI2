@@ -1,22 +1,38 @@
-import openai from "../config/openai.js";
+import { GoogleGenAI } from "@google/genai";
 import Progress from "../models/Progress.js";
-import ollama from 'ollama'
 
+// Initialize Gemini client
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+
+// Helper function to call Gemini
+const callGemini = async (prompt) => {
+  try {
+    const response = await ai.models.generateContent({
+      model: "gemini-2.0-flash-001", // Gemini 2.0 model
+      contents: prompt,
+      temperature: 0.7,
+      maxOutputTokens: 500,
+    });
+
+    // response.text contains the generated text
+    return response.text;
+  } catch (error) {
+    console.error("Gemini API error:", error.message);
+    throw new Error("Gemini API failed");
+  }
+};
+
+// Career advice endpoint
 export const getCareerAdvice = async (req, res) => {
   try {
     const { skills, experience, interests } = req.body;
 
     const prompt = `The user has skills: ${skills}.
-    Experience: ${experience}.
-    Interests: ${interests}.
-    Suggest 3 career paths, trending job roles, required skills, and a 6-month learning roadmap,Keep it concise.`
+Experience: ${experience}.
+Interests: ${interests}.
+Suggest 3 career paths, trending job roles, required skills, and a 6-month learning roadmap. Keep it concise.`;
 
-    const response = await ollama.chat({
-      model: "gemma3:4b",   // ✅ Can swap with any OpenRouter-supported model
-      messages: [{ role: "user", content: prompt }],
-    });
-
-    const cleanText = response.message.content.replace(/\*/g, "");
+    const cleanText = await callGemini(prompt);
 
     res.json({ advice: cleanText });
   } catch (error) {
@@ -25,41 +41,32 @@ export const getCareerAdvice = async (req, res) => {
   }
 };
 
-
-// Skill recommendations + auto-save
-export const getSkillAdvice = async (req, res) => {  
+// Skill advice + auto-save endpoint
+export const getSkillAdvice = async (req, res) => {
   try {
     const { career } = req.body;
     const userId = req.user?.id;
 
     const prompt = `Suggest the top 10 essential technical and soft skills required for a career in ${career}.
-    Output only a clean bullet-point list of skills.`;
+Output only a clean bullet-point list of skills.`;
 
-    const response = await ollama.chat({
-      model: "gemma3:4b",
-      messages: [{ role: "user", content: prompt }],
-    });
-    console.log(response.message.content)
+    const rawText = await callGemini(prompt);
+    console.log(rawText);
 
-    const rawText = response.message.content;
-
-    // Extract skills (split by new lines / bullet points)
     const skills = rawText
       .split("\n")
       .map((line) => line.replace(/^[-*•]\s*/, "").trim())
       .filter((line) => line.length > 0 && !line.endsWith(":"));
 
-    // Save into Progress DB
     let progress = await Progress.findOne({ user: userId });
     if (!progress) {
       progress = new Progress({ user: userId, skills: [] });
     }
 
-    // Spread skills evenly across 6 months
-    progress.skills=[];
+    progress.skills = [];
     const totalMonths = 6;
     skills.forEach((skill, index) => {
-      const month = (index % totalMonths) + 1;  // Assign 1 → 6 cyclically
+      const month = (index % totalMonths) + 1;
       if (!progress.skills.some((s) => s.name.toLowerCase() === skill.toLowerCase())) {
         progress.skills.push({ name: skill, completed: false, month });
       }
@@ -69,7 +76,7 @@ export const getSkillAdvice = async (req, res) => {
 
     res.json({ suggestedSkills: skills, roadmap: progress.skills });
   } catch (error) {
-    console.error("getSkillAdvice error:", error.response?.data || error.message);
+    console.error("getSkillAdvice error:", error.message);
     res.status(500).json({ message: "Failed to generate skill roadmap", error: error.message });
   }
 };
