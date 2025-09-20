@@ -15,6 +15,7 @@ function App() {
   return (
     <AuthProvider>
       <Router>
+        <div className="mt-8 md:mt-16">
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
@@ -26,6 +27,7 @@ function App() {
           <Route path="/skills" element={<Skills />} />
            <Route path="/resume-builder" element={<ResumeBuilder />} />
         </Routes>
+        </div>
       </Router>
     </AuthProvider>
   );

@@ -30,6 +30,7 @@ function FloatingParticles() {
     delay: Math.random() * 2,
     duration: 3 + Math.random() * 2,
   }));
+  
 
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">

@@ -32,7 +32,10 @@ Experience: ${experience}.
 Interests: ${interests}.
 Suggest 3 career paths, trending job roles, required skills, and a 6-month learning roadmap. Keep it concise.`;
 
-    const cleanText = await callGemini(prompt);
+    const rawText = await callGemini(prompt);
+
+    // remove stars only
+    const cleanText = rawText.replace(/\*/g, "");
 
     res.json({ advice: cleanText });
   } catch (error) {
@@ -40,6 +43,7 @@ Suggest 3 career paths, trending job roles, required skills, and a 6-month learn
     res.status(500).json({ error: "AI service failed" });
   }
 };
+
 
 // Skill advice + auto-save endpoint
 export const getSkillAdvice = async (req, res) => {
@@ -51,9 +55,9 @@ export const getSkillAdvice = async (req, res) => {
 Output only a clean bullet-point list of skills.`;
 
     const rawText = await callGemini(prompt);
-    console.log(rawText);
+    const cleanText = rawText.replace(/\*/g, "");
 
-    const skills = rawText
+    const skills = cleanText
       .split("\n")
       .map((line) => line.replace(/^[-*•]\s*/, "").trim())
       .filter((line) => line.length > 0 && !line.endsWith(":"));
