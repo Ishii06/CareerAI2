@@ -210,7 +210,7 @@ export default function Career() {
       {/* Header */}
       <div className="text-center py-8 md:py-12">
         <motion.h1 
-          className="text-4xl md:text-6xl font-extrabold tracking-tight bg-gradient-to-r from-white via-violet-200 to-pink-200 bg-clip-text text-transparent mb-3"
+          className="text-4xl md:text-6xl font-extrabold tracking-tight bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-400 bg-clip-text text-transparent mb-3"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}

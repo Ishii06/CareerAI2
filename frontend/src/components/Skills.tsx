@@ -61,7 +61,6 @@ function Skills({ userId: propUserId }: { userId?: string }) {
     setSuggestedSkills,
     setRoadmap,
     setVideos,
-    reset,
   } = useSkillsStore();
 
   const [loading, setLoading] = useState(false);
@@ -120,7 +119,6 @@ function Skills({ userId: propUserId }: { userId?: string }) {
       setVideos(videosMap);
     } catch (err) {
       console.error(err);
-      reset();
     } finally {
       setLoading(false);
     }
@@ -156,7 +154,7 @@ function Skills({ userId: propUserId }: { userId?: string }) {
       {/* Header */}
       <div className="text-center py-8 md:py-12">
         <motion.h1 
-          className="text-4xl md:text-6xl font-extrabold tracking-tight bg-gradient-to-r from-white via-violet-200 to-pink-200 bg-clip-text text-transparent mb-3"
+          className="text-4xl md:text-6xl font-extrabold tracking-tight bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-400 bg-clip-text text-transparent mb-3"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
@@ -264,7 +262,7 @@ function Skills({ userId: propUserId }: { userId?: string }) {
                 Creating personalized skill development plan for "<span className="text-violet-400">{career}</span>"...
               </p>
             </motion.div>
-          ) : hasSearched && suggestedSkills.length > 0 ? (
+          ) :  suggestedSkills.length > 0 ? (
             /* Results */
             <motion.div
               key="results"
@@ -426,7 +424,7 @@ function Skills({ userId: propUserId }: { userId?: string }) {
                 </motion.div>
               )}
             </motion.div>
-          ) : hasSearched && suggestedSkills.length === 0 ? (
+          ) :  suggestedSkills.length === 0 ? (
             /* No Results */
             <motion.div
               key="no-results"
