@@ -71,7 +71,7 @@ function Skills({ userId: propUserId }: { userId?: string }) {
   useEffect(() => {
     if (!propUserId) {
       axios
-        .get("http://localhost:5000/api/auth/profile", { withCredentials: true })
+        .get("https://careerai-laww.onrender.com/api/auth/profile", { withCredentials: true })
         .then((res) => setUser(res.data.user))
         .catch(() => setUser(null));
     }
@@ -85,7 +85,7 @@ function Skills({ userId: propUserId }: { userId?: string }) {
     try {
       // 1️⃣ Get skills & roadmap from backend
       const res = await axios.post(
-        "http://localhost:5000/api/ai/skills",
+        "https://careerai-laww.onrender.com/api/ai/skills",
         { career },
         { withCredentials: true }
       );
@@ -103,7 +103,7 @@ function Skills({ userId: propUserId }: { userId?: string }) {
         skills.map(async (skill) => {
           try {
             const videoRes = await axios.get(
-              `http://localhost:5000/api/courses/youtube/${encodeURIComponent(
+              `https://careerai-laww.onrender.com/api/courses/youtube/${encodeURIComponent(
                 skill
               )}`,
               { withCredentials: true }

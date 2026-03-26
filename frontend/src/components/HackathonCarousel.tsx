@@ -18,7 +18,7 @@ const HackathonCarousel = () => {
   useEffect(() => {
     const fetchHackathons = async () => {
       try {
-        const { data } = await axios.get("http://localhost:5000/api/hackathons");
+        const { data } = await axios.get("https://careerai-laww.onrender.com/api/hackathons");
         if (Array.isArray(data)) setHackathons(data);
         else setHackathons([]);
       } catch (err) {

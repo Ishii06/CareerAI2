@@ -25,7 +25,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
   logout: async () => {
     try {
-      await axios.post("http://localhost:5000/api/auth/logout", {}, { withCredentials: true });
+      await axios.post("https://careerai-laww.onrender.com/api/auth/logout", {}, { withCredentials: true });
     } catch (err) {
       console.error("Logout failed", err);
     } finally {
@@ -35,7 +35,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
   fetchUser: async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/auth/profile", { withCredentials: true });
+      const res = await axios.get("https://careerai-laww.onrender.com/api/auth/profile", { withCredentials: true });
       if (res.data.user) {
         set({ user: res.data.user, isLoggedIn: true });
       } else {

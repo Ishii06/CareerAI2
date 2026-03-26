@@ -32,7 +32,7 @@ export default function Dashboard() {
   useEffect(() => {
     if (user?._id) {
       axios
-        .get(`http://localhost:5000/api/progress/${user._id}`)
+        .get(`https://careerai-laww.onrender.com/api/progress/${user._id}`)
         .then((p) => setProgress(p.data.skills || []))
         .catch(() => setProgress([]));
     }
@@ -54,7 +54,7 @@ export default function Dashboard() {
     if (!user?._id) return;
     try {
       const res = await axios.post(
-        `http://localhost:5000/api/progress/${user._id}`,
+        `https://careerai-laww.onrender.com/api/progress/${user._id}`,
         { skillName, completed }
       );
       setProgress(res.data.skills);

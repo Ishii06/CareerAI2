@@ -176,7 +176,7 @@ export default function Career() {
     updateState({ showResult: false });
     
     try {
-      const res = await axios.post('http://localhost:5000/api/ai/career', {
+      const res = await axios.post('https://careerai-laww.onrender.com/api/ai/career', {
         skills: [skill],
         experience,
         interests: [interest],

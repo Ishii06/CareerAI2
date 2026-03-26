@@ -71,7 +71,7 @@ function Internship() {
     setHasSearched(true);
     
     try {
-      const response = await fetch(`http://localhost:5000/api/internships?skill=${encodeURIComponent(skill)}`);
+      const response = await fetch(`https://careerai-laww.onrender.com/api/internships?skill=${encodeURIComponent(skill)}`);
       const data = await response.json();
       
       // Map backend data to include skills array if needed

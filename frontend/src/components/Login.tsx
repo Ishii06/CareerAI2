@@ -15,11 +15,11 @@ function Login() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5000/api/auth/login", {
+      await axios.post("https://careerai-laww.onrender.com/api/auth/login", {
         email,
         password,
       }, { withCredentials: true });
-      const res = await axios.get("http://localhost:5000/api/auth/profile", { withCredentials: true });
+      const res = await axios.get("https://careerai-laww.onrender.com/api/auth/profile", { withCredentials: true });
       if (res.data.user) {
         login(res.data.user); // update global state
         navigate("/");
@@ -102,7 +102,7 @@ function Login() {
             </motion.button>
             <div className="mt-6 text-center">
             <a
-              href="http://localhost:5000/api/auth/google"
+              href="https://careerai-laww.onrender.com/api/auth/google"
               className="inline-flex items-center justify-center w-full px-4 py-3 bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg text-white font-semibold transition"
             >
               <img
