@@ -8,17 +8,16 @@ export const getInternships = async (req, res) => {
 
     try {
         browser = await puppeteer.launch({
-            headless: true,
-            executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || puppeteer.executablePath(),
-            args: [
-                "--no-sandbox",
-                "--disable-setuid-sandbox",
-                "--disable-dev-shm-usage",
-                "--disable-gpu",
-                "--no-zygote",
-                "--single-process"
-            ]
-        });
+  headless: "new", // better for production
+  args: [
+    "--no-sandbox",
+    "--disable-setuid-sandbox",
+    "--disable-dev-shm-usage",
+    "--disable-gpu",
+    "--no-zygote",
+    "--single-process"
+  ]
+});
 
         const page = await browser.newPage();
         await page.setUserAgent(
