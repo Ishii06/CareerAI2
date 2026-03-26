@@ -125,7 +125,7 @@ export const googleCallback= async(req,res)=>{
       await storeRefreshToken(user._id, refreshToken);
       setCookies(res, accessToken, refreshToken);
 
-      res.redirect("http://localhost:5173/"); // frontend
+      res.redirect("https://career-ai-0604.onrender.com/"); // frontend
     } catch (error) {
       res.status(500).json({ message: "Google auth failed", error });
     }

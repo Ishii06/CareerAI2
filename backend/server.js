@@ -19,7 +19,7 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: 'http://localhost:5173', // frontend URL
+  origin: 'https://career-ai-0604.onrender.com', // frontend URL
   credentials: true
 }));
 app.use(express.json());
