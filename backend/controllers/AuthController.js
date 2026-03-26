@@ -17,14 +17,14 @@ const storeRefreshToken = async (userId, refreshToken) => {
 const setCookies = (res, accessToken, refreshToken) => {
   res.cookie('accessToken', accessToken, {
     httpOnly: true,
-    sameSite: 'strict',
-    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'none',
+    secure: true,
     maxAge: 15 * 60 * 1000
   });
   res.cookie('refreshToken', refreshToken, {
     httpOnly: true,
-    sameSite: 'strict',
-    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'none',
+    secure: true,
     maxAge: 7 * 24 * 60 * 60 * 1000
   });
 };
@@ -96,7 +96,7 @@ export const refreshToken = async (req, res) => {
 };
 
 export const getProfile = async (req, res) => {
-  if (!req.user) return res.status(401).json({ message: "Not authenticated" });
+  if (!req.user) return res.status(401).json({ message: "Not authenticated les" });
   const user = await User.findById(req.user.id).select('-password');
   return res.status(200).json({ user });
 };
