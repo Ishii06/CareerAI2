@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useAuthStore } from "./store/useUserStore.ts";
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://careerai-laww.onrender.com/api";
+
 function Login() {
   const { login } = useAuthStore();
   
@@ -102,7 +104,7 @@ function Login() {
             </motion.button>
             <div className="mt-6 text-center">
             <a
-              href="https://careerai-laww.onrender.com/api/auth/google"
+              href={`${API_BASE_URL}/auth/google`}
               className="inline-flex items-center justify-center w-full px-4 py-3 bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg text-white font-semibold transition"
             >
               <img

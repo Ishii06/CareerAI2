@@ -4,6 +4,8 @@ import redis from '../config/redis.js';
 import dotenv from 'dotenv';
 dotenv.config();
 
+const frontendUrl = process.env.FRONTEND_URL || 'https://career-ai-0604.onrender.com';
+
 const generateTokens = (userId) => {
   const accessToken = jwt.sign({ userId }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
   const refreshToken = jwt.sign({ userId }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
@@ -84,8 +86,8 @@ export const refreshToken = async (req, res) => {
     const accessToken = jwt.sign({ userId: decoded.userId }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
     res.cookie('accessToken', accessToken, {
       httpOnly: true,
-      sameSite: 'strict',
-      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'none',
+      secure: true,
       maxAge: 15 * 60 * 1000
     });
 
@@ -108,8 +110,13 @@ export const logout = async (req, res) => {
       const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
       await redis.del(decoded.userId);
     }
-    res.clearCookie('accessToken');
-    res.clearCookie('refreshToken');
+    const cookieOptions = {
+      httpOnly: true,
+      sameSite: 'none',
+      secure: true
+    };
+    res.clearCookie('accessToken', cookieOptions);
+    res.clearCookie('refreshToken', cookieOptions);
     return res.status(200).json({ message: "Logged out successfully" });
   } catch (error) {
     return res.status(500).json({ message: "Internal server error", error });
@@ -125,7 +132,7 @@ export const googleCallback= async(req,res)=>{
       await storeRefreshToken(user._id, refreshToken);
       setCookies(res, accessToken, refreshToken);
 
-      res.redirect("https://career-ai-0604.onrender.com/"); // frontend
+      res.redirect(`${frontendUrl}/`);
     } catch (error) {
       res.status(500).json({ message: "Google auth failed", error });
     }

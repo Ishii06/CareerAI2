@@ -16,10 +16,11 @@ dotenv.config();
 
 // Initialize app
 const app = express();
+const frontendUrl = process.env.FRONTEND_URL || 'https://career-ai-0604.onrender.com';
 
 // Middleware
 app.use(cors({
-  origin: 'https://career-ai-0604.onrender.com', // frontend URL
+  origin: frontendUrl,
   credentials: true
 }));
 app.use(express.json());
