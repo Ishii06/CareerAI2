@@ -3,24 +3,43 @@ import puppeteer from "puppeteer";
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export const getInternships = async (req, res) => {
-    const { skill } = req.query; // get skill from query param
+    const { skill } = req.query;
+    let browser;
+
     try {
-        const browser = await puppeteer.launch({ headless: true });
+        browser = await puppeteer.launch({
+            headless: true,
+            args: [
+                "--no-sandbox",
+                "--disable-setuid-sandbox",
+                "--disable-dev-shm-usage",
+                "--disable-gpu",
+                "--no-zygote",
+                "--single-process"
+            ]
+        });
+
         const page = await browser.newPage();
+        await page.setUserAgent(
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+        );
+        await page.setViewport({ width: 1366, height: 768 });
 
         let url = "https://internshala.com/internships/";
         if (skill) {
             url = `https://internshala.com/internships/keywords-${encodeURIComponent(skill)}/`;
         }
 
-        await page.goto(url, { waitUntil: "networkidle2" });
+        await page.goto(url, {
+            waitUntil: "domcontentloaded",
+            timeout: 60000
+        });
 
-        await page.waitForSelector(".individual_internship");
+        await page.waitForSelector(".individual_internship", { timeout: 15000 });
 
-        // Scroll to load more internships
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 4; i++) {
             await page.evaluate(() => window.scrollBy(0, window.innerHeight));
-            await sleep(1000);
+            await sleep(800);
         }
 
         const internships = await page.evaluate(() => {
@@ -41,19 +60,32 @@ export const getInternships = async (req, res) => {
                         stipend: stipendEl ? stipendEl.innerText.trim() : "",
                         duration: durationEl ? durationEl.innerText.trim() : "",
                         posted: postedEl ? postedEl.innerText.trim() : "",
-                        link: titleEl ? "https://internshala.com" + titleEl.getAttribute("href") : "",
+                        link: titleEl ? `https://internshala.com${titleEl.getAttribute("href") || ""}` : ""
                     };
                 })
                 .filter(
-                    (i) =>
-                        i.title || i.company || i.location || i.stipend || i.duration || i.posted || i.link
-                ); 
+                    (internship) =>
+                        internship.title ||
+                        internship.company ||
+                        internship.location ||
+                        internship.stipend ||
+                        internship.duration ||
+                        internship.posted ||
+                        internship.link
+                );
         });
 
-        await browser.close();
-        res.json({ internships });
+        return res.json({ internships });
     } catch (error) {
         console.error("Internship scraping error:", error);
-        res.status(500).json({ internships: [], error: error.message });
+        return res.status(500).json({
+            internships: [],
+            error: error.message,
+            hint: "Puppeteer launch/selectors failed in deployment environment"
+        });
+    } finally {
+        if (browser) {
+            await browser.close();
+        }
     }
 };
