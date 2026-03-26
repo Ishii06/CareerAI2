@@ -9,6 +9,7 @@ export const getInternships = async (req, res) => {
     try {
         browser = await puppeteer.launch({
             headless: true,
+            executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || puppeteer.executablePath(),
             args: [
                 "--no-sandbox",
                 "--disable-setuid-sandbox",
@@ -30,10 +31,7 @@ export const getInternships = async (req, res) => {
             url = `https://internshala.com/internships/keywords-${encodeURIComponent(skill)}/`;
         }
 
-        await page.goto(url, {
-            waitUntil: "domcontentloaded",
-            timeout: 60000
-        });
+        await page.goto(url, { waitUntil: "domcontentloaded", timeout: 60000 });
 
         await page.waitForSelector(".individual_internship", { timeout: 15000 });
 
@@ -60,29 +58,19 @@ export const getInternships = async (req, res) => {
                         stipend: stipendEl ? stipendEl.innerText.trim() : "",
                         duration: durationEl ? durationEl.innerText.trim() : "",
                         posted: postedEl ? postedEl.innerText.trim() : "",
-                        link: titleEl ? `https://internshala.com${titleEl.getAttribute("href") || ""}` : ""
+                        link: titleEl ? "https://internshala.com" + titleEl.getAttribute("href") : "",
                     };
                 })
                 .filter(
-                    (internship) =>
-                        internship.title ||
-                        internship.company ||
-                        internship.location ||
-                        internship.stipend ||
-                        internship.duration ||
-                        internship.posted ||
-                        internship.link
-                );
+                    (i) =>
+                        i.title || i.company || i.location || i.stipend || i.duration || i.posted || i.link
+                ); 
         });
 
         return res.json({ internships });
     } catch (error) {
         console.error("Internship scraping error:", error);
-        return res.status(500).json({
-            internships: [],
-            error: error.message,
-            hint: "Puppeteer launch/selectors failed in deployment environment"
-        });
+        return res.status(500).json({ internships: [], error: error.message });
     } finally {
         if (browser) {
             await browser.close();
