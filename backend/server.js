@@ -18,12 +18,18 @@ dotenv.config();
 const app = express();
 const frontendUrl = process.env.FRONTEND_URL || 'https://career-ai-0604.onrender.com';
 
-// Middleware
-app.options('/{*any}', cors());
-app.use(cors({
+const corsOptions = {
   origin: frontendUrl,
-  credentials: true
-}));
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
+
+// Apply to all standard requests
+app.use(cors(corsOptions));
+
+// Explicitly handle all preflight requests
+app.options('*', cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
 app.use(passport.initialize());
