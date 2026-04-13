@@ -19,6 +19,7 @@ const app = express();
 const frontendUrl = process.env.FRONTEND_URL || 'https://career-ai-0604.onrender.com';
 
 // Middleware
+app.options('*', cors());
 app.use(cors({
   origin: frontendUrl,
   credentials: true
